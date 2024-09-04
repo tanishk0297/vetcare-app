@@ -12,6 +12,8 @@ import ViewVaccineStock from './pages/ViewVaccineStock';
 import PatientDetails from './pages/PatientDetails'; // Import your new component
 import AddDetails from './pages/AddDetails'; // Import your new component
 import PrivateRoute from './components/PrivateRoute';
+import NotFound from './pages/NotFound'; // Import your 404 component
+
 
 const App = () => {
   return (
@@ -84,7 +86,9 @@ const App = () => {
             </Layout>
           </PrivateRoute>
         } />
+         <Route path="*" element={<NotFound />} />
       </Routes>
+      
     </Router>
   );
 };
