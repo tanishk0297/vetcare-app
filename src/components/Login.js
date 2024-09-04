@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://192.168.29.117:5000/api/auth/login', {
+      const res = await axios.post('https://vetcare-api.vercel.app/api/auth/login', {
         username,
         password,
       });

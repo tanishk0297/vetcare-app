@@ -17,7 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/notifications'); // Update with your backend URL
+        const response = await axios.get('https://vetcare-api.vercel.app/api/notifications'); // Update with your backend URL
         setNotifications(response.data);
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -31,7 +31,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/patients/dashpatients/fetch'); // Update with your backend URL
+        const response = await axios.get('https://vetcare-api.vercel.app/api/patients/dashpatients/fetch'); // Update with your backend URL
         setPatients(response.data);
       } catch (error) {
         console.error('Error fetching patients:', error);
@@ -45,7 +45,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchVaccineStock = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/vaccine-stock');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/vaccine-stock');
         const vaccineData = response.data;
   
         // Combine quantities for vaccines with the same vaccineId._id
@@ -78,7 +78,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchMedicineStock = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/medicine-stock');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/medicine-stock');
         const medicineData = response.data;
   
         // Combine quantities for medicines with the same medicineId

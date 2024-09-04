@@ -10,7 +10,7 @@ const ViewMedicineStock = () => {
     // Fetch all medicine stock data
     const fetchStock = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/medicine-stock');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/medicine-stock');
         setStock(response.data);
       } catch (error) {
         console.error('Error fetching stock:', error);

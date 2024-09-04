@@ -27,12 +27,12 @@ const AddPatient = () => {
     setIsSubmitting(true); // Set submitting state to true
     try {
       // Post the patient data
-      const response = await axios.post('http://192.168.29.117:5000/api/patients/add', formData);
+      const response = await axios.post('https://vetcare-api.vercel.app/api/patients/add', formData);
       console.log('Patient Data:', response.data);
       
       // Send notification
       const comment = `New patient added: ${formData.ownerName}`;
-      await axios.post('http://192.168.29.117:5000/api/notifications', { comment });
+      await axios.post('https://vetcare-api.vercel.app/api/notifications', { comment });
       
       // Show success gif and play sound
       setShowGif(true);

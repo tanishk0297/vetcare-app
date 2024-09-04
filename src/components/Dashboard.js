@@ -25,7 +25,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/notifications');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/notifications');
         setNotifications(response.data);
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -38,7 +38,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/patients/dashpatients/fetch');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/patients/dashpatients/fetch');
         setPatients(response.data);
       } catch (error) {
         console.error('Error fetching patients:', error);
@@ -51,7 +51,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/details/api/dashdetails/fetch');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/details/api/dashdetails/fetch');
         const detailsData = response.data;
 
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -99,7 +99,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchVaccineStock = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/vaccine-stock');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/vaccine-stock');
         const vaccineData = response.data;
 
         const combinedVaccineStock = vaccineData.reduce((acc, current) => {
@@ -130,7 +130,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchMedicineStock = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/medicine-stock');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/medicine-stock');
         const medicineData = response.data;
 
         const combinedMedicineStock = medicineData.reduce((acc, current) => {

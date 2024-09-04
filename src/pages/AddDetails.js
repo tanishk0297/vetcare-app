@@ -22,8 +22,8 @@ const AddDetails = () => {
       if (type === '') return; // Do nothing if type is not set
       try {
         const endpoint = type === 'medicine' 
-          ? 'http://192.168.29.117:5000/api/medicine-stock'
-          : 'http://192.168.29.117:5000/api/vaccine-stock';
+          ? 'https://vetcare-api.vercel.app/api/medicine-stock'
+          : 'https://vetcare-api.vercel.app/api/vaccine-stock';
         const response = await axios.get(endpoint);
         setItems(response.data);
       } catch (error) {
@@ -72,7 +72,7 @@ const AddDetails = () => {
   
     try {
       // Fetch patient details
-      const patientResponse = await axios.get(`http://192.168.29.117:5000/api/patients/get-details/${id}`);
+      const patientResponse = await axios.get(`https://vetcare-api.vercel.app/api/patients/get-details/${id}`);
       const { ownerName, patientName, species, age, sex, mobileNumber } = patientResponse.data.patient;
       console.log(patientResponse.data);
   
@@ -92,7 +92,7 @@ const AddDetails = () => {
       };
   
       // Post the data to the details API associated with the patient ID
-      await axios.post(`http://192.168.29.117:5000/api/details/${id}`, detailData);
+      await axios.post(`https://vetcare-api.vercel.app/api/details/${id}`, detailData);
   
       // Check if selectedItem has a valid value
       if (!selectedItem) {
@@ -119,11 +119,11 @@ const AddDetails = () => {
   
         if (newQuantity > 0) {
           // Update the quantity if it's still greater than 0
-          await axios.put(`http://192.168.29.117:5000/api/${type}-stock/put/${selectedItemId}`, { quantity: newQuantity });
+          await axios.put(`https://vetcare-api.vercel.app/api/${type}-stock/put/${selectedItemId}`, { quantity: newQuantity });
           console.log('Stock updated successfully');
         } else {
           // Delete the item if the new quantity is 0
-          await axios.delete(`http://192.168.29.117:5000/api/${type}-stock/delete/${selectedItemId}`);
+          await axios.delete(`https://vetcare-api.vercel.app/api/${type}-stock/delete/${selectedItemId}`);
           console.log(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully due to zero quantity`);
         }
   

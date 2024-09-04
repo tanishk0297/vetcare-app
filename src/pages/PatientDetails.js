@@ -12,7 +12,7 @@ const PatientDetails = () => {
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
-        const response = await axios.get(`http://192.168.29.117:5000/api/patients/get-details/${id}`);
+        const response = await axios.get(`https://vetcare-api.vercel.app/api/patients/get-details/${id}`);
         setPatientDetails(response.data);
       } catch (error) {
         console.error('Error fetching patient details:', error);

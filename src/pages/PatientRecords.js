@@ -34,7 +34,7 @@ const PatientRecord = () => {
     setLoading(true);
     try {
       const queryString = new URLSearchParams(filters).toString();
-      const response = await axios.get(`http://192.168.29.117:5000/api/patients?${queryString}`);
+      const response = await axios.get(`https://vetcare-api.vercel.app/api/patients?${queryString}`);
       setAllPatients(response.data);
       setCurrentPage(1);
     } catch (error) {
@@ -93,7 +93,7 @@ const PatientRecord = () => {
           // Confirm deletion and perform delete
           try {
             for (const patientId of patientsToDelete) {
-              await axios.delete(`http://192.168.29.117:5000/api/patients/${patientId}`);
+              await axios.delete(`https://vetcare-api.vercel.app/api/patients/${patientId}`);
             }
             fetchPatients();
             setDeletedPatients([]);

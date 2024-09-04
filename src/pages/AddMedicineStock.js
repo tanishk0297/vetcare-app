@@ -18,7 +18,7 @@ const AddMedicineStock = () => {
     // Fetch existing medicines for the dropdown
     const fetchMedicines = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/medicines');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/medicines');
         setMedicines(response.data);
       } catch (error) {
         console.error('Error fetching medicines:', error);
@@ -46,19 +46,19 @@ const AddMedicineStock = () => {
 
     // Add new medicine
     try {
-      await axios.post('http://192.168.29.117:5000/api/medicines', {
+      await axios.post('https://vetcare-api.vercel.app/api/medicines', {
         brandName,
         medicineName,
         mrp
       });
         // Send notification
         const comment = `New Medicine added: ${medicineName}`;
-        await axios.post('http://192.168.29.117:5000/api/notifications', { comment });
+        await axios.post('https://vetcare-api.vercel.app/api/notifications', { comment });
       // Clear fields and refetch medicines
       setBrandName('');
       setMedicineName('');
       setMrp('');
-      const response = await axios.get('http://192.168.29.117:5000/api/medicines');
+      const response = await axios.get('https://vetcare-api.vercel.app/api/medicines');
       setMedicines(response.data);
 
       // Play success animation and sound
@@ -83,7 +83,7 @@ const AddMedicineStock = () => {
 
     // Add stock to selected medicine
     try {
-      await axios.post('http://192.168.29.117:5000/api/medicine-stock', {
+      await axios.post('https://vetcare-api.vercel.app/api/medicine-stock', {
         medicineId: selectedMedicine,
         brandName: selectedMedicineDetails.brandName,
         medicineName: selectedMedicineDetails.medicineName,
@@ -94,7 +94,7 @@ const AddMedicineStock = () => {
 
        // Send notification
        const comment = `${selectedMedicineDetails.medicineName} medicine stock updated by +${quantity} units `;
-       await axios.post('http://192.168.29.117:5000/api/notifications', { comment });
+       await axios.post('https://vetcare-api.vercel.app/api/notifications', { comment });
       // Clear fields
       setSelectedMedicine('');
       setQuantity('');

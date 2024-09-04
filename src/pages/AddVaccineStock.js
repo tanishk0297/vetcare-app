@@ -18,7 +18,7 @@ const AddVaccineStock = () => {
     // Fetch existing vaccines for the dropdown
     const fetchVaccines = async () => {
       try {
-        const response = await axios.get('http://192.168.29.117:5000/api/vaccines');
+        const response = await axios.get('https://vetcare-api.vercel.app/api/vaccines');
         setVaccines(response.data);
       } catch (error) {
         console.error('Error fetching vaccines:', error);
@@ -41,7 +41,7 @@ const AddVaccineStock = () => {
   const handleAddVaccine = async () => {
     // Add new vaccine
     try {
-      await axios.post('http://192.168.29.117:5000/api/vaccines', {
+      await axios.post('https://vetcare-api.vercel.app/api/vaccines', {
         brandName,
         vaccineName,
         mrp
@@ -49,12 +49,12 @@ const AddVaccineStock = () => {
 
        // Send notification
        const comment = `New Vaccine added: ${vaccineName}`;
-       await axios.post('http://192.168.29.117:5000/api/notifications', { comment });
+       await axios.post('https://vetcare-api.vercel.app/api/notifications', { comment });
       // Clear fields and refetch vaccines
       setBrandName('');
       setVaccineName('');
       setMrp('');
-      const response = await axios.get('http://192.168.29.117:5000/api/vaccines');
+      const response = await axios.get('https://vetcare-api.vercel.app/api/vaccines');
       setVaccines(response.data);
       playSuccessAnimation();
     } catch (error) {
@@ -66,7 +66,7 @@ const AddVaccineStock = () => {
     // Add stock to selected vaccine
     const selectedVaccineDetails = vaccines.find(v => v._id === selectedVaccine) || {};
     try {
-      await axios.post('http://192.168.29.117:5000/api/vaccine-stock', {
+      await axios.post('https://vetcare-api.vercel.app/api/vaccine-stock', {
         vaccineId: selectedVaccine,
         quantity,
         expiryDate,
@@ -76,7 +76,7 @@ const AddVaccineStock = () => {
       });
        // Send notification
        const comment = `${selectedVaccineDetails.vaccineName} vaccine stock updated by +${quantity} units `;
-       await axios.post('http://192.168.29.117:5000/api/notifications', { comment });
+       await axios.post('https://vetcare-api.vercel.app/api/notifications', { comment });
       // Clear fields
       setSelectedVaccine('');
       setQuantity('');
