@@ -1,0 +1,252 @@
+.record-container {
+    padding: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background: #f3f4f6; /* Light grey background for contrast */
+    border-radius: 15px; /* Rounded corners for container */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
+    animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(45deg, #1abc9c, #16a085);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.filter-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.filter-container input,
+.filter-container select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 220px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-container input:focus,
+.filter-container select:focus {
+    border-color: #1abc9c;
+    box-shadow: 0 4px 8px rgba(26, 188, 156, 0.3);
+}
+
+.patient-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.patient-table th,
+.patient-table td {
+    border: none; /* Removed borders for cleaner look */
+    padding: 15px;
+    text-align: left;
+}
+
+.patient-table th {
+    background-color: #17AB8E;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    border-radius: 10px 10px 0 0; /* Rounded top corners */
+}
+
+.patient-table tr {
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border-radius: 10px; /* Rounded corners for rows */
+    overflow: hidden;
+}
+
+.patient-table tr:hover {
+    background-color: #f1f1f1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.patient-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.pagination-buttons button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #17AB8E, #1abc9c);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pagination-buttons button:hover {
+    background: linear-gradient(90deg, #16a085, #1abc9c);
+    transform: translateY(-2px) scale(1.05);
+}
+
+.pagination-buttons button:disabled {
+    background: #5dd3bc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.pagination-info {
+    font-size: 16px;
+    color: #555;
+}
+
+.delete-icon-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.delete-icon {
+    font-size: 2em;
+    color: #e74c3c;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.delete-icon:hover {
+    color: #c0392b;
+    transform: scale(1.1);
+}
+
+.checkbox-container {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+.checkbox-container input {
+    opacity: 0;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.checkbox-container .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 24px;
+    width: 24px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #17AB8E;
+    box-shadow: 0 0 8px rgba(23, 171, 142, 0.6);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #1abc9c;
+}
+
+.checkbox-container .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 8px;
+    top: 4px;
+    width: 8px;
+    height: 16px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.patient-table td {
+    cursor: pointer;
+  }
+  
+  .patient-table td:hover {
+    background-color: #f0f0f0;
+  }
+  
+
+  /* Container for the success animation */
+.success-animation {
+    position: fixed; /* Position it on top of all content */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:transparent; /* Semi-transparent background */
+    z-index: 800; /* High z-index to ensure it's on top */
+  }
+  
+  /* Styling for the success GIF */
+  .success-animation img {
+    width: 200px;  /* Adjust the size as needed */
+    height: 200px; /* Adjust the size as needed */
+    border-radius: 10px; /* Optional: add some rounding to corners */
+    box-shadow: 0 0 20px rgba(179, 147, 147, 0.7); /* Optional: add a glowing effect */
+  }
+  
+ 

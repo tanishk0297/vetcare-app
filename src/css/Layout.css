@@ -1,0 +1,38 @@
+/* Layout.css */
+
+/* Main layout container */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease; /* Smooth transition for content margin */
+  }
+  
+  /* Main content area */
+  .content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 250px; /* Default width for expanded navbar */
+    transition: margin-left 0.3s ease; /* Smooth transition for content margin */
+  }
+  
+  /* Adjust content margin for expanded navbar */
+  .navbar-expanded ~ .content {
+    margin-left: 250px; /* Width of expanded navbar */
+  }
+  
+  /* Adjust content margin for collapsed navbar */
+  .navbar-collapsed ~ .content {
+    margin-left: 60px; /* Width of collapsed navbar */
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .layout {
+      flex-direction: column; /* Stack layout vertically on small screens */
+    }
+  
+    .content {
+      margin-left: 0; /* Reset margin for content in mobile view */
+    }
+  }
+  

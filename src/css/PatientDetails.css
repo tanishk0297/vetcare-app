@@ -1,0 +1,60 @@
+
+h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(45deg, #1abc9c, #16a085);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+.details-container {
+    padding: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  .details-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .details-card h3 {
+    margin-bottom: 15px;
+    color: #16a085;
+  }
+  
+  .details-card p {
+    margin: 5px 0;
+  }
+  
+  .add-btn {
+    background-color: #17AB8E;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .add-btn:hover {
+    background-color: #139b7e;
+  }
+  

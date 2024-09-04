@@ -1,0 +1,22 @@
+/* Container for the success animation */
+.success-animation {
+    position: fixed; /* Position it on top of all content */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:transparent; /* Semi-transparent background */
+    z-index: 800; /* High z-index to ensure it's on top */
+  }
+  
+  /* Styling for the success GIF */
+  .success-animation img {
+    width: 50px;  /* Adjust the size as needed */
+    height: 50px; /* Adjust the size as needed */
+    border-radius: 10px; /* Optional: add some rounding to corners */
+    box-shadow: 0 0 20px rgba(179, 147, 147, 0.7); /* Optional: add a glowing effect */
+  }
+  

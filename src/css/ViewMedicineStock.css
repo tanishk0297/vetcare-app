@@ -1,0 +1,82 @@
+/* Container for the page */
+.view-stock-container {
+    margin: 20px;
+    padding: 20px;
+    background: #ecf0f1;
+    color: #2c3e50;
+    height: 100vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  /* Heading */
+  .view-stock-container h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(45deg, #1abc9c, #16a085);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Search bar */
+  .search-bar {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    font-size: 1em;
+  }
+  
+  /* Table styling */
+  .stock-table-container {
+    overflow-x: auto;
+  }
+  
+  .stock-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+  
+  .stock-table th,
+  .stock-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .stock-table th {
+    background: #1abc9c;
+    color: #fff;
+  }
+  
+  .stock-table tr:hover {
+    background: #f1f1f1;
+  }
+  
+  /* Ensure table fits on smaller screens */
+  @media (max-width: 768px) {
+    .stock-table th,
+    .stock-table td {
+      font-size: 0.9em;
+      padding: 8px;
+    }
+  }
+  
