@@ -392,35 +392,50 @@ const Dashboard = () => {
         </section>
 
         <section className="dashboard-card">
-      <h2 className="card-title">Expiry Alert</h2>
-      <ul className="card-list">
-        {expiryAlerts.map(alert => (
-          <li key={alert._id} className="alert-card-list-item">
-            {alert.comment}
-          </li>
-        ))}
-      </ul>
-    </section>
-        <section className="dashboard-card">
-          <h2 className="card-title">low stock</h2>
-          <ul className="card-list">
-            {lowStockAlerts.map(alert => (
-              <li key={alert._id} className="alert-card-list-item">
-                {alert.comment}
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section className="dashboard-card">
-          <h2 className="card-title">Notifications</h2>
-          <ul className="card-list">
-            {notifications.map(notification => (
-              <li key={notification._id} className="card-list-item">
-                {notification.comment}
-              </li>
-            ))}
-          </ul>
-        </section>
+  <h2 className="card-title">Expiry Alert</h2>
+  {expiryAlerts.length === 0 ? (
+    <p className="no-new-alert">No new expiry alerts</p>
+  ) : (
+    <ul className="card-list">
+      {expiryAlerts.map(alert => (
+        <li key={alert._id} className="alert-card-list-item">
+          {alert.comment}
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
+<section className="dashboard-card">
+  <h2 className="card-title">Low Stock</h2>
+  {lowStockAlerts.length === 0 ? (
+    <p className="no-new-alert">No new low stock alerts</p>
+  ) : (
+    <ul className="card-list">
+      {lowStockAlerts.map(alert => (
+        <li key={alert._id} className="alert-card-list-item">
+          {alert.comment}
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
+<section className="dashboard-card">
+  <h2 className="card-title">Notifications</h2>
+  {notifications.length === 0 ? (
+    <p className="no-new-alert">No new notifications</p>
+  ) : (
+    <ul className="card-list">
+      {notifications.map(notification => (
+        <li key={notification._id} className="card-list-item">
+          {notification.comment}
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
 
         <section className="dashboard-card">
           <h2 className="card-title">Vaccine Stock</h2>

@@ -201,3 +201,11 @@
     }
   }
   
+
+  .no-new-alert {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+  }
+  
