@@ -1,17 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Line, Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement,Filler } from 'chart.js';
+import { Line, Pie, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, BarElement, BarController } from 'chart.js';
 import axios from 'axios';
 import '../css/Dashboard.css';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
+// Registering the necessary components for the charts
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  BarElement,
+  BarController // Register BarController for the Bar chart
+
+);
+const twoMonthsFromNow = new Date();
+const LOW_STOCK_THRESHOLD = 5; // Define the threshold for low stock
+twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = { day: 'numeric', month: 'long' };
+  return date.toLocaleDateString(undefined, options);
+};
+
+
+const isNearExpiry = (expiryDate) => {
+  const date = new Date(expiryDate);
+  return date <= twoMonthsFromNow;
+};
 
 const Dashboard = () => {
+
+
+  // Get the current date
+  const currentDate = formatDate(new Date());
   const [notifications, setNotifications] = useState([]);
   const [patients, setPatients] = useState([]);
   const [vaccineStock, setVaccineStock] = useState([]);
   const [medicineStock, setMedicineStock] = useState([]);
   const [lineChartData, setLineChartData] = useState({ labels: [], datasets: [] });
+  const [expiryAlerts, setExpiryAlerts] = useState([]);
+  const [lowStockAlerts, setLowStockAlerts] = useState([]);
   const [pieChartData, setPieChartData] = useState({
     labels: ['Vaccines', 'Medicines'],
     datasets: [
@@ -21,8 +54,23 @@ const Dashboard = () => {
       },
     ],
   });
+  const [username, setUsername] = useState('User');
+  function handleLogout() {
+    // Clear local storage
+    localStorage.clear();
+  
+    // Refresh the page
+    window.location.reload();
+  }
+  
 
   useEffect(() => {
+    // Fetch username from localStorage
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+
     const fetchNotifications = async () => {
       try {
         const response = await axios.get('https://vetcare-api.vercel.app/api/notifications');
@@ -102,6 +150,7 @@ const Dashboard = () => {
         const response = await axios.get('https://vetcare-api.vercel.app/api/vaccine-stock');
         const vaccineData = response.data;
 
+        // Combine vaccine stock data
         const combinedVaccineStock = vaccineData.reduce((acc, current) => {
           const existing = acc.find(item => item.vaccineId === current.vaccineId._id);
           if (existing) {
@@ -118,7 +167,42 @@ const Dashboard = () => {
           return acc;
         }, []);
 
+        // Filter vaccines that are near expiry
+        const filteredVaccineData = vaccineData.filter(item => isNearExpiry(item.expiryDate));
+
+        // Create alerts for near expiry vaccines
+        const vaccineAlerts = filteredVaccineData.map(item => ({
+          _id: item.vaccineId._id,
+          name: item.vaccineName,
+          brand: item.brandName,
+          quantity: item.quantity,
+          expiryDate: formatDate(item.expiryDate),
+          comment: `Vaccine: ${item.vaccineName} (${item.brandName}), Quantity: ${item.quantity}, Expiry Date: ${formatDate(item.expiryDate)}`
+        }));
+
+        // Filter out existing alerts to avoid duplicates
+        setExpiryAlerts(prevAlerts => {
+          const existingIds = new Set(prevAlerts.map(alert => alert._id));
+          const newAlerts = vaccineAlerts.filter(alert => !existingIds.has(alert._id));
+          return [...prevAlerts, ...newAlerts];
+        });
+
+        // Filter vaccines with low stock
+        const lowStockVaccines = combinedVaccineStock.filter(item => item.quantity < LOW_STOCK_THRESHOLD);
+        const lowStockAlerts = lowStockVaccines.map(item => ({
+          _id: item.vaccineId,
+          name: item.vaccineName,
+          brand: item.brandName,
+          quantity: item.quantity,
+          comment: `Vaccine: ${item.vaccineName} (${item.brandName}), Quantity: ${item.quantity} (Low Stock)`
+        }));
+
+        // Update state with low stock alerts
+        setLowStockAlerts(lowStockAlerts);
+
+        // Update state with combined vaccine stock
         setVaccineStock(combinedVaccineStock);
+
       } catch (error) {
         console.error('Error fetching vaccine stock:', error);
       }
@@ -133,6 +217,7 @@ const Dashboard = () => {
         const response = await axios.get('https://vetcare-api.vercel.app/api/medicine-stock');
         const medicineData = response.data;
 
+        // Combine medicine stock data
         const combinedMedicineStock = medicineData.reduce((acc, current) => {
           const existing = acc.find(item => item.medicineId === current.medicineId._id);
           if (existing) {
@@ -149,7 +234,42 @@ const Dashboard = () => {
           return acc;
         }, []);
 
+        // Filter medicines that are near expiry
+        const filteredMedicineData = medicineData.filter(item => isNearExpiry(item.expiryDate));
+
+        // Create alerts for near expiry medicines
+        const medicineAlerts = filteredMedicineData.map(item => ({
+          _id: item.medicineId._id,
+          name: item.medicineName,
+          brand: item.brandName,
+          quantity: item.quantity,
+          expiryDate: formatDate(item.expiryDate),
+          comment: `Medicine: ${item.medicineName} (${item.brandName}), Quantity: ${item.quantity}, Expiry Date: ${formatDate(item.expiryDate)}`
+        }));
+
+        // Filter out existing alerts to avoid duplicates
+        setExpiryAlerts(prevAlerts => {
+          const existingIds = new Set(prevAlerts.map(alert => alert._id));
+          const newAlerts = medicineAlerts.filter(alert => !existingIds.has(alert._id));
+          return [...prevAlerts, ...newAlerts];
+        });
+
+        // Filter medicines with low stock
+        const lowStockMedicines = combinedMedicineStock.filter(item => item.quantity < LOW_STOCK_THRESHOLD);
+        const lowStockAlerts = lowStockMedicines.map(item => ({
+          _id: item.medicineId,
+          name: item.medicineName,
+          brand: item.brandName,
+          quantity: item.quantity,
+          comment: `Medicine: ${item.medicineName} (${item.brandName}), Quantity: ${item.quantity} (Low Stock)`
+        }));
+
+        // Update state with low stock alerts
+        setLowStockAlerts(prevAlerts => [...prevAlerts, ...lowStockAlerts]);
+
+        // Update state with combined medicine stock
         setMedicineStock(combinedMedicineStock);
+
       } catch (error) {
         console.error('Error fetching medicine stock:', error);
       }
@@ -157,6 +277,7 @@ const Dashboard = () => {
 
     fetchMedicineStock();
   }, []);
+
 
   useEffect(() => {
     // Calculate total quantities for vaccines and medicines
@@ -175,10 +296,89 @@ const Dashboard = () => {
     });
   }, [vaccineStock, medicineStock]);
 
+  const [barChartData, setBarChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Vaccine Stock by Brand',
+        data: [],
+        backgroundColor: '#e74c3c',
+      },
+      {
+        label: 'Medicine Stock by Brand',
+        data: [],
+        backgroundColor: '#3498db',
+      },
+    ],
+  });
+
+  useEffect(() => {
+    const brandNames = [];
+    const vaccineQuantities = [];
+    const medicineQuantities = [];
+
+    // Combine vaccine and medicine stocks by brand
+    vaccineStock.forEach(vaccine => {
+      if (!brandNames.includes(vaccine.brandName)) {
+        brandNames.push(vaccine.brandName);
+        vaccineQuantities.push(vaccine.quantity);
+        medicineQuantities.push(0); // Initializing medicine quantity for the brand
+      } else {
+        const index = brandNames.indexOf(vaccine.brandName);
+        vaccineQuantities[index] += vaccine.quantity;
+      }
+    });
+
+    medicineStock.forEach(medicine => {
+      if (!brandNames.includes(medicine.brandName)) {
+        brandNames.push(medicine.brandName);
+        medicineQuantities.push(medicine.quantity);
+        vaccineQuantities.push(0); // Initializing vaccine quantity for the brand
+      } else {
+        const index = brandNames.indexOf(medicine.brandName);
+        medicineQuantities[index] += medicine.quantity;
+      }
+    });
+
+    setBarChartData({
+      labels: brandNames,
+      datasets: [
+        {
+          label: 'Vaccine Stock by Brand',
+          data: vaccineQuantities,
+          backgroundColor: '#e74c3c',
+        },
+        {
+          label: 'Medicine Stock by Brand',
+          data: medicineQuantities,
+          backgroundColor: '#3498db',
+        },
+        
+      ],
+      
+    });
+  }, [vaccineStock, medicineStock]);
+  
+
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Dashboard</h1>
+
+      <div className="dashboard-title-container">
+      <h1 className="dashboard-title">
+  Hi, {username}<br/>{currentDate}
+  <div 
+    className="logout-icon" 
+    style={{ userSelect: 'none', cursor: 'pointer' }} 
+    onClick={handleLogout}
+  >
+    🔓
+  </div>
+</h1>
+
+</div>
+
       <div className="dashboard-grid">
+    
         <section className="dashboard-card">
           <h2 className="card-title">Patient Records</h2>
           <ul className="card-list">
@@ -191,6 +391,26 @@ const Dashboard = () => {
           </ul>
         </section>
 
+        <section className="dashboard-card">
+      <h2 className="card-title">Expiry Alert</h2>
+      <ul className="card-list">
+        {expiryAlerts.map(alert => (
+          <li key={alert._id} className="alert-card-list-item">
+            {alert.comment}
+          </li>
+        ))}
+      </ul>
+    </section>
+        <section className="dashboard-card">
+          <h2 className="card-title">low stock</h2>
+          <ul className="card-list">
+            {lowStockAlerts.map(alert => (
+              <li key={alert._id} className="alert-card-list-item">
+                {alert.comment}
+              </li>
+            ))}
+          </ul>
+        </section>
         <section className="dashboard-card">
           <h2 className="card-title">Notifications</h2>
           <ul className="card-list">
@@ -233,7 +453,6 @@ const Dashboard = () => {
             )}
           </ul>
         </section>
-
         <section className="dashboard-card chart-section">
           <h2 className="card-title">Graphs & Charts</h2>
           <div className="charts-container">
@@ -241,14 +460,38 @@ const Dashboard = () => {
               <h3>Patient Count (Last 6 Months)</h3>
               <Line data={lineChartData} options={{ responsive: true, plugins: { legend: { display: true } } }} />
             </div>
+            </div>
+            
+        
+        </section>
+        <section className="dashboard-card chart-section">
+          <h2 className="card-title">Graphs & Charts</h2>
+          <div className="charts-container">
             <div className="chart-card">
               <h3>Stock Distribution</h3>
               <Pie data={pieChartData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
             </div>
           </div>
         </section>
+        
+        
+      
+        <section className="dashboard-card chart-section">
+        <h2 className="card-title">Brand Stock Comparison</h2>
+        <div className="charts-container">
+          <div className="chart-card">
+            <h3>Vaccine and Medicine Stock by Brand</h3>
+            <Bar data={barChartData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
+          </div>
+        </div>
+      </section>
       </div>
+
+      
     </div>
+
+     
+  
   );
 };
 

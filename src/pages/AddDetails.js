@@ -11,7 +11,8 @@ const AddDetails = () => {
     name: '',
     brand: '',
     mrp: '',
-    nextAppointmentDate: ''
+    nextAppointmentDate: '',
+    adjustQuantity: '' // New field for quantity adjustment
   });
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
@@ -69,13 +70,13 @@ const AddDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       // Fetch patient details
       const patientResponse = await axios.get(`https://vetcare-api.vercel.app/api/patients/get-details/${id}`);
       const { ownerName, patientName, species, age, sex, mobileNumber } = patientResponse.data.patient;
       console.log(patientResponse.data);
-  
+
       // Prepare the data to send
       const detailData = {
         type,
@@ -90,33 +91,38 @@ const AddDetails = () => {
         sex,
         mobileNumber
       };
-  
+
       // Post the data to the details API associated with the patient ID
       await axios.post(`https://vetcare-api.vercel.app/api/details/${id}`, detailData);
-  
+
       // Check if selectedItem has a valid value
       if (!selectedItem) {
         throw new Error('No item selected');
       }
-  
+
       // Find the selected item's ID and current quantity from the items array
       const itemKey = type === 'medicine' ? 'medicineName' : 'vaccineName';
       const selectedItemObject = items.find(item => item[itemKey] === selectedItem);
       if (!selectedItemObject) {
         throw new Error('Selected item not found in items');
       }
-  
+
       const selectedItemId = selectedItemObject._id;
       const currentQuantity = selectedItemObject.quantity;
-  
+
       if (selectedItemId && currentQuantity != null) {
         // Log values for debugging
         console.log('Selected Item ID:', selectedItemId);
         console.log('Current Quantity:', currentQuantity);
-  
-        // Update the stock record by decrementing the quantity
-        const newQuantity = currentQuantity - 1;
-  
+
+        // Adjust the stock record by using the provided quantity
+        const givenQuantity = parseInt(formData.adjustQuantity, 10);
+        const adjustedQuantity = isNaN(givenQuantity) ? 1 : givenQuantity;
+        const newQuantity = currentQuantity - adjustedQuantity;
+
+
+
+        
         if (newQuantity > 0) {
           // Update the quantity if it's still greater than 0
           await axios.put(`https://vetcare-api.vercel.app/api/${type}-stock/put/${selectedItemId}`, { quantity: newQuantity });
@@ -126,7 +132,7 @@ const AddDetails = () => {
           await axios.delete(`https://vetcare-api.vercel.app/api/${type}-stock/delete/${selectedItemId}`);
           console.log(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully due to zero quantity`);
         }
-  
+
         // Navigate to the patient details page
         navigate(`/patients/${id}`);
       } else {
@@ -136,7 +142,7 @@ const AddDetails = () => {
       console.error('Error adding details or updating stock:', error);
     }
   };
-  
+
   return (
     <div className="form-container">
       <h1>Add Details</h1>
@@ -157,23 +163,22 @@ const AddDetails = () => {
         <div className="form-group">
           <label htmlFor="item">Select {type.charAt(0).toUpperCase() + type.slice(1)}</label>
           <select
-  id="item"
-  name="item"
-  value={selectedItem}
-  onChange={handleItemChange}
-  disabled={type === ''} // Disable if type is not selected
->
-  <option value="">Select {type}</option>
-  {items.map(item => (
-    <option
-      key={type === 'medicine' ? item.medicineName : item.vaccineName}
-      value={type === 'medicine' ? item.medicineName : item.vaccineName}
-    >
-      {type === 'medicine' ? `${item.medicineName} (${item.quantity})` : `${item.vaccineName} (${item.quantity})`}
-    </option>
-  ))}
-</select>
-
+            id="item"
+            name="item"
+            value={selectedItem}
+            onChange={handleItemChange}
+            disabled={type === ''} // Disable if type is not selected
+          >
+            <option value="">Select {type}</option>
+            {items.map(item => (
+              <option
+                key={type === 'medicine' ? item.medicineName : item.vaccineName}
+                value={type === 'medicine' ? item.medicineName : item.vaccineName}
+              >
+                {type === 'medicine' ? `${item.medicineName} (${item.quantity})` : `${item.vaccineName} (${item.quantity})`}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group">
           <label htmlFor="name">Name</label>
@@ -219,6 +224,17 @@ const AddDetails = () => {
             name="nextAppointmentDate"
             value={formData.nextAppointmentDate}
             onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="adjustQuantity">Adjust Quantity</label>
+          <input
+            type="number"
+            id="adjustQuantity"
+            name="adjustQuantity"
+            value={formData.adjustQuantity}
+            onChange={handleChange}
+            placeholder="Enter quantity to adjust"
           />
         </div>
         <button type="submit" className="submit-btn">Submit</button>

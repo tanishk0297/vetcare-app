@@ -19,8 +19,12 @@ const Login = () => {
         password,
       });
 
+      // Store both token and username in localStorage
       localStorage.setItem('token', res.data.token);
-      navigate('/'); // Redirect to the homepage after successful login
+      localStorage.setItem('username', username);
+
+      // Redirect to the homepage after successful login
+      navigate('/');
     } catch (err) {
       setError('Invalid username or password');
     }
