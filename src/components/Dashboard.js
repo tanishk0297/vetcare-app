@@ -45,6 +45,19 @@ const Dashboard = () => {
   const [lineChartData, setLineChartData] = useState({ labels: [], datasets: [] });
   const [expiryAlerts, setExpiryAlerts] = useState([]);
   const [lowStockAlerts, setLowStockAlerts] = useState([]);
+  // State for toggling view more/less for each section
+  const [showAllPatients, setShowAllPatients] = useState(false);
+  const [showAllExpiryAlerts, setShowAllExpiryAlerts] = useState(false);
+  const [showAllLowStock, setShowAllLowStock] = useState(false);
+  const [showAllNotifications, setShowAllNotifications] = useState(false);
+  const [showAllVaccineStock, setShowAllVaccineStock] = useState(false);
+  const [showAllMedicineStock, setShowAllMedicineStock] = useState(false);
+
+  // Handlers for toggling between view more and view less
+  const toggleShowAll = (setter) => setter((prevState) => !prevState);
+
+  // Render logic to show first 5 items or all depending on state
+  const limitItems = (items, showAll) => showAll ? items : items.slice(0, 5);
   const [pieChartData, setPieChartData] = useState({
     labels: ['Vaccines', 'Medicines'],
     datasets: [
@@ -377,97 +390,134 @@ const Dashboard = () => {
 
 </div>
 
-      <div className="dashboard-grid">
-    
-        <section className="dashboard-card">
-          <h2 className="card-title">Patient Records</h2>
+<div className="dashboard-grid">
+      {/* Patient Records */}
+      <section className="dashboard-card">
+        <h2 className="card-title">Patient Records</h2>
+        <ul className="card-list">
+          {limitItems(patients, showAllPatients).map(patient => (
+            <li key={patient._id} className="card-list-item">
+              <span className="patient-name">{patient.ownerName}</span>
+              <span className="patient-mobile">{patient.mobileNumber}</span>
+            </li>
+          ))}
+        </ul>
+        {patients.length > 5 && (
+          <button className="view-more-btn" onClick={() => toggleShowAll(setShowAllPatients)}>
+            {showAllPatients ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </section>
+
+      {/* Expiry Alert */}
+      <section className="dashboard-card">
+        <h2 className="card-title">Expiry Alert</h2>
+        {expiryAlerts.length === 0 ? (
+          <p className="no-new-alert">No new expiry alerts</p>
+        ) : (
           <ul className="card-list">
-            {patients.map(patient => (
-              <li key={patient._id} className="card-list-item">
-                <span className="patient-name">{patient.ownerName}</span>
-                <span className="patient-mobile">{patient.mobileNumber}</span>
+            {limitItems(expiryAlerts, showAllExpiryAlerts).map(alert => (
+              <li key={alert._id} className="alert-card-list-item">
+                {alert.comment}
               </li>
             ))}
           </ul>
-        </section>
+        )}
+        {expiryAlerts.length > 5 && (
+          <button className="view-more-btn" onClick={() => toggleShowAll(setShowAllExpiryAlerts)}>
+            {showAllExpiryAlerts ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </section>
 
-        <section className="dashboard-card">
-  <h2 className="card-title">Expiry Alert</h2>
-  {expiryAlerts.length === 0 ? (
-    <p className="no-new-alert">No new expiry alerts</p>
-  ) : (
-    <ul className="card-list">
-      {expiryAlerts.map(alert => (
-        <li key={alert._id} className="alert-card-list-item">
-          {alert.comment}
-        </li>
-      ))}
-    </ul>
-  )}
-</section>
-
-<section className="dashboard-card">
-  <h2 className="card-title">Low Stock</h2>
-  {lowStockAlerts.length === 0 ? (
-    <p className="no-new-alert">No new low stock alerts</p>
-  ) : (
-    <ul className="card-list">
-      {lowStockAlerts.map(alert => (
-        <li key={alert._id} className="alert-card-list-item">
-          {alert.comment}
-        </li>
-      ))}
-    </ul>
-  )}
-</section>
-
-<section className="dashboard-card">
-  <h2 className="card-title">Notifications</h2>
-  {notifications.length === 0 ? (
-    <p className="no-new-alert">No new notifications</p>
-  ) : (
-    <ul className="card-list">
-      {notifications.map(notification => (
-        <li key={notification._id} className="card-list-item">
-          {notification.comment}
-        </li>
-      ))}
-    </ul>
-  )}
-</section>
-
-
-        <section className="dashboard-card">
-          <h2 className="card-title">Vaccine Stock</h2>
+      {/* Low Stock */}
+      <section className="dashboard-card">
+        <h2 className="card-title">Low Stock</h2>
+        {lowStockAlerts.length === 0 ? (
+          <p className="no-new-alert">No new low stock alerts</p>
+        ) : (
           <ul className="card-list">
-            {vaccineStock.length > 0 ? (
-              vaccineStock.map(vaccine => (
-                <li key={vaccine.vaccineId} className="card-list-item">
-                  <span className="vaccine-name">{vaccine.vaccineName} ({vaccine.brandName})</span>
-                  <span className="vaccine-quantity">{vaccine.quantity} units</span>
-                </li>
-              ))
-            ) : (
-              <li className="card-list-item">No vaccine stock data available</li>
-            )}
+            {limitItems(lowStockAlerts, showAllLowStock).map(alert => (
+              <li key={alert._id} className="alert-card-list-item">
+                {alert.comment}
+              </li>
+            ))}
           </ul>
-        </section>
+        )}
+        {lowStockAlerts.length > 5 && (
+          <button className="view-more-btn" onClick={() => toggleShowAll(setShowAllLowStock)}>
+            {showAllLowStock ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </section>
 
-        <section className="dashboard-card">
-          <h2 className="card-title">Medicine Stock</h2>
+      {/* Notifications */}
+      <section className="dashboard-card">
+        <h2 className="card-title">Notifications</h2>
+        {notifications.length === 0 ? (
+          <p className="no-new-alert">No new notifications</p>
+        ) : (
           <ul className="card-list">
-            {medicineStock.length > 0 ? (
-              medicineStock.map(medicine => (
-                <li key={medicine._id} className="card-list-item">
-                  <span className="medicine-name">{medicine.medicineName} ({medicine.brandName})</span>
-                  <span className="medicine-quantity">{medicine.quantity} units</span>
-                </li>
-              ))
-            ) : (
-              <li className="card-list-item">No medicine stock data available</li>
-            )}
+            {limitItems(notifications, showAllNotifications).map(notification => (
+              <li key={notification._id} className="card-list-item">
+                {notification.comment}
+              </li>
+            ))}
           </ul>
-        </section>
+        )}
+        {notifications.length > 5 && (
+          <button className="view-more-btn" onClick={() => toggleShowAll(setShowAllNotifications)}>
+            {showAllNotifications ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </section>
+
+      {/* Vaccine Stock */}
+      <section className="dashboard-card">
+        <h2 className="card-title">Vaccine Stock</h2>
+        <ul className="card-list">
+          {vaccineStock.length > 0 ? (
+            limitItems(vaccineStock, showAllVaccineStock).map(vaccine => (
+              <li key={vaccine.vaccineId} className="card-list-item">
+                <span className="vaccine-name">{vaccine.vaccineName} ({vaccine.brandName})</span>
+                <span className="vaccine-quantity">{vaccine.quantity} units</span>
+              </li>
+            ))
+          ) : (
+            <li className="card-list-item">No vaccine stock data available</li>
+          )}
+        </ul>
+        {vaccineStock.length > 5 && (
+          <button className="view-more-btn" onClick={() => toggleShowAll(setShowAllVaccineStock)}>
+            {showAllVaccineStock ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </section>
+
+      {/* Medicine Stock */}
+      <section className="dashboard-card">
+        <h2 className="card-title">Medicine Stock</h2>
+        <ul className="card-list">
+          {medicineStock.length > 0 ? (
+            limitItems(medicineStock, showAllMedicineStock).map(medicine => (
+              <li key={medicine._id} className="card-list-item">
+                <span className="medicine-name">{medicine.medicineName} ({medicine.brandName})</span>
+                <span className="medicine-quantity">{medicine.quantity} units</span>
+              </li>
+            ))
+          ) : (
+            <li className="card-list-item">No medicine stock data available</li>
+          )}
+        </ul>
+        {medicineStock.length > 5 && (
+          <button className="view-more-btn" onClick={() => toggleShowAll(setShowAllMedicineStock)}>
+            {showAllMedicineStock ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </section>
+
+
+
         <section className="dashboard-card chart-section">
           <h2 className="card-title">Graphs & Charts</h2>
           <div className="charts-container">
@@ -476,30 +526,34 @@ const Dashboard = () => {
               <Line data={lineChartData} options={{ responsive: true, plugins: { legend: { display: true } } }} />
             </div>
             </div>
+        </section>
+        <section className="dashboard-card chart-section">
+          
             
-        
-        </section>
-        <section className="dashboard-card chart-section">
-          <h2 className="card-title">Graphs & Charts</h2>
-          <div className="charts-container">
-            <div className="chart-card">
-              <h3>Stock Distribution</h3>
-              <Pie data={pieChartData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
-            </div>
-          </div>
-        </section>
-        
-        
-      
-        <section className="dashboard-card chart-section">
-        <h2 className="card-title">Brand Stock Comparison</h2>
+            <h2 className="card-title">Brand Stock Comparison</h2>
         <div className="charts-container">
           <div className="chart-card">
             <h3>Vaccine and Medicine Stock by Brand</h3>
             <Bar data={barChartData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
           </div>
         </div>
-      </section>
+
+
+        </section>
+        <section className="dashboard-card chart-section">
+        <h2 className="card-title">Graphs & Charts</h2>
+          <div className="charts-container">
+            <div className="chart-card">
+              <h3>Stock Distribution</h3>
+              <Pie data={pieChartData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
+            </div>
+          </div>
+         
+        </section>
+        
+        
+      
+        
       </div>
 
       
