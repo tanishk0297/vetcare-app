@@ -163,17 +163,21 @@ const AddMedicineStock = () => {
             <div className="form-group">
               <label htmlFor="selectMedicine">Select Medicine</label>
               <select
-                id="selectMedicine"
-                value={selectedMedicine}
-                onChange={(e) => setSelectedMedicine(e.target.value)}
-              >
-                <option value="">Select Medicine</option>
-                {medicines.map((medicine) => (
-                  <option key={medicine._id} value={medicine._id}>
-                    {medicine.medicineName}
-                  </option>
-                ))}
-              </select>
+  id="selectMedicine"
+  value={selectedMedicine}
+  onChange={(e) => setSelectedMedicine(e.target.value)}
+>
+  <option value="">Select Medicine</option>
+  {medicines
+    .slice() // Create a shallow copy of the array
+    .sort((a, b) => a.medicineName.localeCompare(b.medicineName)) // Sort alphabetically by medicineName
+    .map((medicine) => (
+      <option key={medicine._id} value={medicine._id}>
+        {medicine.medicineName}
+      </option>
+    ))}
+</select>
+
             </div>
 
             {selectedMedicine ? (

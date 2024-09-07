@@ -139,17 +139,21 @@ const AddVaccineStock = () => {
               <div className="form-group">
                 <label htmlFor="selectVaccine">Select Vaccine</label>
                 <select
-                  id="selectVaccine"
-                  value={selectedVaccine}
-                  onChange={(e) => setSelectedVaccine(e.target.value)}
-                >
-                  <option value="">Select Vaccine</option>
-                  {vaccines.map((vaccine) => (
-                    <option key={vaccine._id} value={vaccine._id}>
-                      {vaccine.vaccineName}
-                    </option>
-                  ))}
-                </select>
+  id="selectVaccine"
+  value={selectedVaccine}
+  onChange={(e) => setSelectedVaccine(e.target.value)}
+>
+  <option value="">Select Vaccine</option>
+  {vaccines
+    .slice() // Create a shallow copy of the array
+    .sort((a, b) => a.vaccineName.localeCompare(b.vaccineName)) // Sort alphabetically by vaccineName
+    .map((vaccine) => (
+      <option key={vaccine._id} value={vaccine._id}>
+        {vaccine.vaccineName}
+      </option>
+    ))}
+</select>
+
               </div>
               {selectedVaccine ? (
                 <>
